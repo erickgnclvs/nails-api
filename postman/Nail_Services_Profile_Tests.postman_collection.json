@@ -1,0 +1,362 @@
+{
+    "info": {
+        "_postman_id": "c6d9f4e3-1234-5678-9abc-def012345678",
+        "name": "Nail Services Profile Tests",
+        "description": "Test collection for Nail Services Profile Management API",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Setup",
+            "item": [
+                {
+                    "name": "Reset Database",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Database reset successful\", function () {",
+                                    "    pm.response.to.have.body(\"Database reset successful\");",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "url": {
+                            "raw": "http://localhost:8080/api/test/reset-db",
+                            "protocol": "http",
+                            "host": ["localhost"],
+                            "port": "8080",
+                            "path": ["api", "test", "reset-db"]
+                        }
+                    }
+                },
+                {
+                    "name": "Register Customer",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "var jsonData = pm.response.json();",
+                                    "pm.globals.set(\"customerToken\", jsonData.token);"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"customer@example.com\",\n    \"password\": \"password123\",\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"phoneNumber\": \"+1234567890\",\n    \"role\": \"CUSTOMER\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8080/api/auth/register",
+                            "protocol": "http",
+                            "host": ["localhost"],
+                            "port": "8080",
+                            "path": ["api", "auth", "register"]
+                        }
+                    }
+                },
+                {
+                    "name": "Register Provider",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "var jsonData = pm.response.json();",
+                                    "pm.globals.set(\"providerToken\", jsonData.token);"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"provider@example.com\",\n    \"password\": \"password123\",\n    \"firstName\": \"Jane\",\n    \"lastName\": \"Smith\",\n    \"phoneNumber\": \"+1234567890\",\n    \"businessName\": \"Jane's Nail Art\",\n    \"description\": \"Professional nail art services\",\n    \"role\": \"PROVIDER\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8080/api/auth/register",
+                            "protocol": "http",
+                            "host": ["localhost"],
+                            "port": "8080",
+                            "path": ["api", "auth", "register"]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Customer Profile Tests",
+            "item": [
+                {
+                    "name": "Get Customer Profile",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Response has correct structure\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData).to.have.property('id');",
+                                    "    pm.expect(jsonData).to.have.property('firstName');",
+                                    "    pm.expect(jsonData).to.have.property('lastName');",
+                                    "    pm.expect(jsonData).to.have.property('phoneNumber');",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{customerToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://localhost:8080/api/profiles/me",
+                            "protocol": "http",
+                            "host": ["localhost"],
+                            "port": "8080",
+                            "path": ["api", "profiles", "me"]
+                        }
+                    }
+                },
+                {
+                    "name": "Update Customer Profile",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Profile updated successfully\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData.firstName).to.eql(\"John Updated\");",
+                                    "    pm.expect(jsonData.lastName).to.eql(\"Doe Updated\");",
+                                    "    pm.expect(jsonData.bio).to.eql(\"I love getting my nails done!\");",
+                                    "    pm.expect(jsonData.phoneNumber).to.eql(\"+1987654321\");",
+                                    "    pm.expect(jsonData.address).to.eql(\"123 Main St, City\");",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{customerToken}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"firstName\": \"John Updated\",\n    \"lastName\": \"Doe Updated\",\n    \"bio\": \"I love getting my nails done!\",\n    \"phoneNumber\": \"+1987654321\",\n    \"address\": \"123 Main St, City\",\n    \"profileImageUrl\": \"https://example.com/profile.jpg\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8080/api/profiles/me",
+                            "protocol": "http",
+                            "host": ["localhost"],
+                            "port": "8080",
+                            "path": ["api", "profiles", "me"]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Provider Profile Tests",
+            "item": [
+                {
+                    "name": "Get Provider Profile",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Profile data is correct\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData.email).to.eql(\"provider@example.com\");",
+                                    "    pm.expect(jsonData.firstName).to.eql(\"Jane\");",
+                                    "    pm.expect(jsonData.lastName).to.eql(\"Smith\");",
+                                    "    pm.expect(jsonData.businessName).to.eql(\"Jane's Nail Art\");",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{providerToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://localhost:8080/api/profiles/me",
+                            "protocol": "http",
+                            "host": ["localhost"],
+                            "port": "8080",
+                            "path": ["api", "profiles", "me"]
+                        }
+                    }
+                },
+                {
+                    "name": "Update Provider Profile",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Profile updated successfully\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData.firstName).to.eql(\"Jane Updated\");",
+                                    "    pm.expect(jsonData.lastName).to.eql(\"Smith Updated\");",
+                                    "    pm.expect(jsonData.businessName).to.eql(\"Jane's Updated Nail Art\");",
+                                    "    pm.expect(jsonData.description).to.eql(\"Updated professional nail art services\");",
+                                    "    pm.expect(jsonData.phoneNumber).to.eql(\"+1987654321\");",
+                                    "    pm.expect(jsonData.address).to.eql(\"456 Business Ave, City\");",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{providerToken}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"firstName\": \"Jane Updated\",\n    \"lastName\": \"Smith Updated\",\n    \"bio\": \"Professional nail artist with 10 years of experience\",\n    \"phoneNumber\": \"+1987654321\",\n    \"address\": \"456 Business Ave, City\",\n    \"profileImageUrl\": \"https://example.com/provider-profile.jpg\",\n    \"businessName\": \"Jane's Updated Nail Art\",\n    \"description\": \"Updated professional nail art services\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8080/api/profiles/me",
+                            "protocol": "http",
+                            "host": ["localhost"],
+                            "port": "8080",
+                            "path": ["api", "profiles", "me"]
+                        }
+                    }
+                },
+                {
+                    "name": "Update Provider Profile - Invalid Input",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 400\", function () {",
+                                    "    pm.response.to.have.status(400);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Error response structure is correct\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData.status).to.eql(400);",
+                                    "    pm.expect(jsonData.error).to.eql(\"VALIDATION_ERROR\");",
+                                    "    pm.expect(jsonData.message).to.eql(\"Validation failed\");",
+                                    "    pm.expect(jsonData.details).to.have.property(\"firstName\");",
+                                    "    pm.expect(jsonData.details.firstName).to.eql(\"First name is required\");",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{providerToken}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"firstName\": \"\",\n    \"lastName\": \"Smith\",\n    \"businessName\": \"Jane's Nail Art\",\n    \"description\": \"Professional nail art services\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8080/api/profiles/me",
+                            "protocol": "http",
+                            "host": ["localhost"],
+                            "port": "8080",
+                            "path": ["api", "profiles", "me"]
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}
