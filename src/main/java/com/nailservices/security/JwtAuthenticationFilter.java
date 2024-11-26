@@ -44,7 +44,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String authHeader = request.getHeader("Authorization");
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
                 log.debug("No valid Authorization header found for path: {}", path);
-                filterChain.doFilter(request, response);
+                // Don't continue the chain here, reject the request
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "No valid Authorization header found");
                 return;
             }
 
@@ -62,28 +63,29 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     );
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
+                    
+                    // Add userId to request attributes
+                    Long userId = jwtTokenUtil.extractUserId(jwt);
+                    request.setAttribute("userId", userId);
+                    
                     log.debug("Successfully authenticated user: {} for path: {}", userEmail, path);
+                    filterChain.doFilter(request, response);
                 } else {
                     log.warn("Invalid JWT token for user: {}", userEmail);
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid JWT token");
                 }
+            } else {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authentication required");
             }
         } catch (Exception e) {
             log.error("Error processing JWT token: {}", e.getMessage());
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Error processing JWT token");
         }
-
-        filterChain.doFilter(request, response);
     }
 
     @Override
     protected boolean shouldNotFilter(@SuppressWarnings("null") HttpServletRequest request) {
         String path = request.getServletPath();
-        return path.startsWith("/auth/") || 
-               path.startsWith("/error") || 
-               path.startsWith("/swagger-ui/") || 
-               path.startsWith("/api-docs/") ||
-               path.startsWith("/api/auth/") || 
-               path.startsWith("/api/error") || 
-               path.startsWith("/api/swagger-ui/") || 
-               path.startsWith("/api/api-docs/");
+        return path.startsWith("/api/v1/auth/") || path.startsWith("/api/v1/test/");
     }
 }

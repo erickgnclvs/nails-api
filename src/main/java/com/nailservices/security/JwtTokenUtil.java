@@ -30,6 +30,9 @@ public class JwtTokenUtil {
 
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
+        if (userDetails instanceof CustomUserDetails) {
+            claims.put("userId", ((CustomUserDetails) userDetails).getId());
+        }
         return createToken(claims, userDetails.getUsername());
     }
 
@@ -54,6 +57,11 @@ public class JwtTokenUtil {
 
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
+    }
+
+    public Long extractUserId(String token) {
+        Claims claims = extractAllClaims(token);
+        return claims.get("userId", Long.class);
     }
 
     private Boolean isTokenExpired(String token) {

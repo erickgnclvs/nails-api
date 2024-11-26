@@ -1,10 +1,17 @@
 {
 	"info": {
 		"_postman_id": "b5d8f3e2-1234-5678-9abc-def012345678",
-		"name": "Nail Services Auth Tests",
+		"name": "Nail Services Auth Tests v1",
 		"description": "Test collection for Nail Services Authentication API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080/api",
+			"type": "string"
+		}
+	],
 	"item": [
 		{
 			"name": "Reset Database",
@@ -29,11 +36,11 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/test/reset-db",
+					"raw": "{{base_url}}/v1/test/reset-db",
 					"protocol": "http",
 					"host": ["localhost"],
 					"port": "8080",
-					"path": ["api", "test", "reset-db"]
+					"path": ["v1", "test", "reset-db"]
 				}
 			}
 		},
@@ -71,11 +78,11 @@
 					"raw": "{\n    \"email\": \"customer@example.com\",\n    \"password\": \"password123\",\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"phoneNumber\": \"+1234567890\",\n    \"role\": \"CUSTOMER\"\n}"
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/auth/register",
+					"raw": "{{base_url}}/v1/auth/register",
 					"protocol": "http",
 					"host": ["localhost"],
 					"port": "8080",
-					"path": ["api", "auth", "register"]
+					"path": ["v1", "auth", "register"]
 				}
 			}
 		},
@@ -114,11 +121,11 @@
 					"raw": "{\n    \"email\": \"customer@example.com\",\n    \"password\": \"password123\",\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"phoneNumber\": \"+1234567890\",\n    \"role\": \"CUSTOMER\"\n}"
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/auth/register",
+					"raw": "{{base_url}}/v1/auth/register",
 					"protocol": "http",
 					"host": ["localhost"],
 					"port": "8080",
-					"path": ["api", "auth", "register"]
+					"path": ["v1", "auth", "register"]
 				}
 			}
 		},
@@ -159,11 +166,11 @@
 					"raw": "{\n    \"email\": \"invalid-email\",\n    \"password\": \"123\",\n    \"firstName\": \"\",\n    \"lastName\": \"Doe\",\n    \"phoneNumber\": \"invalid\",\n    \"role\": \"CUSTOMER\"\n}"
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/auth/register",
+					"raw": "{{base_url}}/v1/auth/register",
 					"protocol": "http",
 					"host": ["localhost"],
 					"port": "8080",
-					"path": ["api", "auth", "register"]
+					"path": ["v1", "auth", "register"]
 				}
 			}
 		},
@@ -201,11 +208,11 @@
 					"raw": "{\n    \"email\": \"provider@example.com\",\n    \"password\": \"password123\",\n    \"firstName\": \"Jane\",\n    \"lastName\": \"Smith\",\n    \"phoneNumber\": \"+1987654321\",\n    \"businessName\": \"Jane's Nail Salon\",\n    \"description\": \"Professional nail care services\",\n    \"role\": \"PROVIDER\"\n}"
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/auth/register",
+					"raw": "{{base_url}}/v1/auth/register",
 					"protocol": "http",
 					"host": ["localhost"],
 					"port": "8080",
-					"path": ["api", "auth", "register"]
+					"path": ["v1", "auth", "register"]
 				}
 			}
 		},
@@ -243,11 +250,11 @@
 					"raw": "{\n    \"email\": \"customer@example.com\",\n    \"password\": \"password123\"\n}"
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/auth/login",
+					"raw": "{{base_url}}/v1/auth/login",
 					"protocol": "http",
 					"host": ["localhost"],
 					"port": "8080",
-					"path": ["api", "auth", "login"]
+					"path": ["v1", "auth", "login"]
 				}
 			}
 		},
@@ -286,11 +293,11 @@
 					"raw": "{\n    \"email\": \"customer@example.com\",\n    \"password\": \"wrongpassword\"\n}"
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/auth/login",
+					"raw": "{{base_url}}/v1/auth/login",
 					"protocol": "http",
 					"host": ["localhost"],
 					"port": "8080",
-					"path": ["api", "auth", "login"]
+					"path": ["v1", "auth", "login"]
 				}
 			}
 		}

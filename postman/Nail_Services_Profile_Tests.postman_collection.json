@@ -1,10 +1,17 @@
 {
     "info": {
         "_postman_id": "c6d9f4e3-1234-5678-9abc-def012345678",
-        "name": "Nail Services Profile Tests",
+        "name": "Nail Services Profile Tests v1",
         "description": "Test collection for Nail Services Profile Management API",
         "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
     },
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://localhost:8080/api",
+            "type": "string"
+        }
+    ],
     "item": [
         {
             "name": "Setup",
@@ -32,11 +39,11 @@
                         "method": "POST",
                         "header": [],
                         "url": {
-                            "raw": "http://localhost:8080/api/test/reset-db",
+                            "raw": "{{base_url}}/v1/test/reset-db",
                             "protocol": "http",
                             "host": ["localhost"],
                             "port": "8080",
-                            "path": ["api", "test", "reset-db"]
+                            "path": ["v1", "test", "reset-db"]
                         }
                     }
                 },
@@ -71,11 +78,11 @@
                             "raw": "{\n    \"email\": \"customer@example.com\",\n    \"password\": \"password123\",\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"phoneNumber\": \"+1234567890\",\n    \"role\": \"CUSTOMER\"\n}"
                         },
                         "url": {
-                            "raw": "http://localhost:8080/api/auth/register",
+                            "raw": "{{base_url}}/v1/auth/register",
                             "protocol": "http",
                             "host": ["localhost"],
                             "port": "8080",
-                            "path": ["api", "auth", "register"]
+                            "path": ["v1", "auth", "register"]
                         }
                     }
                 },
@@ -110,11 +117,11 @@
                             "raw": "{\n    \"email\": \"provider@example.com\",\n    \"password\": \"password123\",\n    \"firstName\": \"Jane\",\n    \"lastName\": \"Smith\",\n    \"phoneNumber\": \"+1234567890\",\n    \"businessName\": \"Jane's Nail Art\",\n    \"description\": \"Professional nail art services\",\n    \"role\": \"PROVIDER\"\n}"
                         },
                         "url": {
-                            "raw": "http://localhost:8080/api/auth/register",
+                            "raw": "{{base_url}}/v1/auth/register",
                             "protocol": "http",
                             "host": ["localhost"],
                             "port": "8080",
-                            "path": ["api", "auth", "register"]
+                            "path": ["v1", "auth", "register"]
                         }
                     }
                 }
@@ -155,11 +162,11 @@
                             }
                         ],
                         "url": {
-                            "raw": "http://localhost:8080/api/profiles/me",
+                            "raw": "{{base_url}}/v1/profiles/me",
                             "protocol": "http",
                             "host": ["localhost"],
                             "port": "8080",
-                            "path": ["api", "profiles", "me"]
+                            "path": ["v1", "profiles", "me"]
                         }
                     }
                 },
@@ -204,11 +211,11 @@
                             "raw": "{\n    \"firstName\": \"John Updated\",\n    \"lastName\": \"Doe Updated\",\n    \"bio\": \"I love getting my nails done!\",\n    \"phoneNumber\": \"+1987654321\",\n    \"address\": \"123 Main St, City\",\n    \"profileImageUrl\": \"https://example.com/profile.jpg\"\n}"
                         },
                         "url": {
-                            "raw": "http://localhost:8080/api/profiles/me",
+                            "raw": "{{base_url}}/v1/profiles/me",
                             "protocol": "http",
                             "host": ["localhost"],
                             "port": "8080",
-                            "path": ["api", "profiles", "me"]
+                            "path": ["v1", "profiles", "me"]
                         }
                     }
                 }
@@ -249,11 +256,11 @@
                             }
                         ],
                         "url": {
-                            "raw": "http://localhost:8080/api/profiles/me",
+                            "raw": "{{base_url}}/v1/profiles/me",
                             "protocol": "http",
                             "host": ["localhost"],
                             "port": "8080",
-                            "path": ["api", "profiles", "me"]
+                            "path": ["v1", "profiles", "me"]
                         }
                     }
                 },
@@ -299,11 +306,11 @@
                             "raw": "{\n    \"firstName\": \"Jane Updated\",\n    \"lastName\": \"Smith Updated\",\n    \"bio\": \"Professional nail artist with 10 years of experience\",\n    \"phoneNumber\": \"+1987654321\",\n    \"address\": \"456 Business Ave, City\",\n    \"profileImageUrl\": \"https://example.com/provider-profile.jpg\",\n    \"businessName\": \"Jane's Updated Nail Art\",\n    \"description\": \"Updated professional nail art services\"\n}"
                         },
                         "url": {
-                            "raw": "http://localhost:8080/api/profiles/me",
+                            "raw": "{{base_url}}/v1/profiles/me",
                             "protocol": "http",
                             "host": ["localhost"],
                             "port": "8080",
-                            "path": ["api", "profiles", "me"]
+                            "path": ["v1", "profiles", "me"]
                         }
                     }
                 },
@@ -348,11 +355,11 @@
                             "raw": "{\n    \"firstName\": \"\",\n    \"lastName\": \"Smith\",\n    \"businessName\": \"Jane's Nail Art\",\n    \"description\": \"Professional nail art services\"\n}"
                         },
                         "url": {
-                            "raw": "http://localhost:8080/api/profiles/me",
+                            "raw": "{{base_url}}/v1/profiles/me",
                             "protocol": "http",
                             "host": ["localhost"],
                             "port": "8080",
-                            "path": ["api", "profiles", "me"]
+                            "path": ["v1", "profiles", "me"]
                         }
                     }
                 }
