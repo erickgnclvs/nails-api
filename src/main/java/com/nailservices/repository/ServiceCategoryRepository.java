@@ -1,6 +1,6 @@
 package com.nailservices.repository;
 
-import com.nailservices.model.ServiceCategory;
+import com.nailservices.entity.ServiceCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

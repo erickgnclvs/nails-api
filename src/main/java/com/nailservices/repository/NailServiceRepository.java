@@ -1,6 +1,6 @@
 package com.nailservices.repository;
 
-import com.nailservices.model.NailService;
+import com.nailservices.entity.NailService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

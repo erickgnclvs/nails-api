@@ -1,17 +1,17 @@
-package com.nailservices.service;
+package com.nailservices.service.auth;
 
-import com.nailservices.dto.AuthResponse;
-import com.nailservices.dto.LoginRequest;
-import com.nailservices.dto.RegisterRequest;
+import com.nailservices.dto.auth.AuthResponse;
+import com.nailservices.dto.auth.LoginRequest;
+import com.nailservices.dto.auth.RegisterRequest;
 import com.nailservices.entity.User;
 import com.nailservices.entity.UserRole;
 import com.nailservices.exception.NailServicesException;
-import com.nailservices.model.Profile;
-import com.nailservices.model.ProfileType;
+import com.nailservices.entity.Profile;
+import com.nailservices.entity.ProfileType;
 import com.nailservices.repository.ProfileRepository;
 import com.nailservices.repository.UserRepository;
 import com.nailservices.security.JwtTokenUtil;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,22 +21,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class AuthService {
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private ProfileRepository profileRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final UserRepository userRepository;
+    private final ProfileRepository profileRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtTokenUtil jwtTokenUtil;
+    private final AuthenticationManager authenticationManager;
 
     @Transactional
     public AuthResponse register(RegisterRequest request) {

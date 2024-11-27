@@ -1,4 +1,4 @@
-package com.nailservices.model;
+package com.nailservices.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;

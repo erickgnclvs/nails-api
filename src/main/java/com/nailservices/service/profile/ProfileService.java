@@ -1,24 +1,23 @@
-package com.nailservices.service;
+package com.nailservices.service.profile;
 
-import com.nailservices.dto.ProfileResponse;
-import com.nailservices.dto.ProfileRequest;
+import com.nailservices.dto.profile.ProfileRequest;
+import com.nailservices.dto.profile.ProfileResponse;
+import com.nailservices.entity.Profile;
 import com.nailservices.entity.User;
 import com.nailservices.exception.NailServicesException;
-import com.nailservices.model.Profile;
 import com.nailservices.repository.ProfileRepository;
 import com.nailservices.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class ProfileService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
     
-    @Autowired
-    private ProfileRepository profileRepository;
+    private final ProfileRepository profileRepository;
 
     @Transactional(readOnly = true)
     public ProfileResponse getProfileByEmail(String email) {

@@ -1,4 +1,4 @@
-package com.nailservices.dto;
+package com.nailservices.dto.service;
 
 import lombok.Data;
 import java.time.LocalDateTime;

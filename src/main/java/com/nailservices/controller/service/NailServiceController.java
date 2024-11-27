@@ -1,8 +1,9 @@
-package com.nailservices.controller;
+package com.nailservices.controller.service;
 
-import com.nailservices.dto.NailServiceRequest;
-import com.nailservices.dto.NailServiceResponse;
-import com.nailservices.service.NailServiceManager;
+import com.nailservices.dto.service.NailServiceRequest;
+import com.nailservices.dto.service.NailServiceResponse;
+import com.nailservices.service.service.NailServiceService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,13 +11,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
-
 @RestController
 @RequestMapping("/api/v1/services")
 @RequiredArgsConstructor
 public class NailServiceController {
-    private final NailServiceManager serviceManager;
+    private final NailServiceService serviceManager;
 
     @PostMapping
     @PreAuthorize("hasRole('PROVIDER')")

@@ -1,4 +1,4 @@
-package com.nailservices.dto;
+package com.nailservices.dto.auth;
 
 import com.nailservices.entity.UserRole;
 import lombok.AllArgsConstructor;

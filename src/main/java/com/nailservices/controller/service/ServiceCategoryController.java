@@ -1,7 +1,7 @@
-package com.nailservices.controller;
+package com.nailservices.controller.service;
 
-import com.nailservices.dto.ServiceCategoryDTO;
-import com.nailservices.service.ServiceCategoryService;
+import com.nailservices.dto.service.ServiceCategoryDTO;
+import com.nailservices.service.service.ServiceCategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

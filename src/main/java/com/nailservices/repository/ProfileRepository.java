@@ -1,6 +1,6 @@
 package com.nailservices.repository;
 
-import com.nailservices.model.Profile;
+import com.nailservices.entity.Profile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

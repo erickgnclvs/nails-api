@@ -1,7 +1,7 @@
-package com.nailservices.service;
+package com.nailservices.service.service;
 
-import com.nailservices.dto.ServiceCategoryDTO;
-import com.nailservices.model.ServiceCategory;
+import com.nailservices.dto.service.ServiceCategoryDTO;
+import com.nailservices.entity.ServiceCategory;
 import com.nailservices.repository.ServiceCategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

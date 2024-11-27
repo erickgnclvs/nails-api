@@ -1,10 +1,11 @@
-package com.nailservices.controller;
+package com.nailservices.controller.auth;
 
-import com.nailservices.dto.AuthResponse;
-import com.nailservices.dto.LoginRequest;
-import com.nailservices.dto.RegisterRequest;
-import com.nailservices.service.AuthService;
+import com.nailservices.dto.auth.AuthResponse;
+import com.nailservices.dto.auth.LoginRequest;
+import com.nailservices.dto.auth.RegisterRequest;
+import com.nailservices.service.auth.AuthService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/auth")
+@RequiredArgsConstructor
 public class AuthController {
 
     @Autowired

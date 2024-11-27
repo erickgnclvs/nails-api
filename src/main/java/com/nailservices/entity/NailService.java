@@ -1,21 +1,43 @@
-package com.nailservices.model;
+package com.nailservices.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Data
-@Table(name = "service_categories")
-public class ServiceCategory {
+@Table(name = "nail_services")
+public class NailService {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "provider_id", nullable = false)
+    private Profile provider;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private ServiceCategory category;
 
     @Column(nullable = false)
     private String name;
 
     private String description;
+
+    @Column(nullable = false)
+    private Integer duration;
+
+    @Column(nullable = false)
+    private BigDecimal price;
+
+    @Column(name = "is_active")
+    private Boolean isActive = true;
+
+    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ServiceImage> images;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

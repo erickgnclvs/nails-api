@@ -1,7 +1,7 @@
-package com.nailservices.dto;
+package com.nailservices.dto.profile;
 
-import com.nailservices.model.Profile;
-import com.nailservices.model.ProfileType;
+import com.nailservices.entity.Profile;
+import com.nailservices.entity.ProfileType;
 import lombok.Data;
 
 import java.time.LocalDateTime;

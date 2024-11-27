@@ -1,4 +1,4 @@
-package com.nailservices.service;
+package com.nailservices.service.auth;
 
 import com.nailservices.entity.User;
 import com.nailservices.repository.UserRepository;

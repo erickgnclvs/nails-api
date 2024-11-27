@@ -1,6 +1,5 @@
-package com.nailservices.model;
+package com.nailservices.entity;
 
-import com.nailservices.entity.User;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;

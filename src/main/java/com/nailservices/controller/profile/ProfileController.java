@@ -1,8 +1,8 @@
-package com.nailservices.controller;
+package com.nailservices.controller.profile;
 
-import com.nailservices.dto.ProfileRequest;
-import com.nailservices.dto.ProfileResponse;
-import com.nailservices.service.ProfileService;
+import com.nailservices.dto.profile.ProfileRequest;
+import com.nailservices.dto.profile.ProfileResponse;
+import com.nailservices.service.profile.ProfileService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

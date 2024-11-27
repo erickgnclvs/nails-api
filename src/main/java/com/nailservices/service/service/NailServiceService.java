@@ -1,12 +1,12 @@
-package com.nailservices.service;
+package com.nailservices.service.service;
 
-import com.nailservices.dto.NailServiceRequest;
-import com.nailservices.dto.NailServiceResponse;
-import com.nailservices.dto.ServiceCategoryDTO;
+import com.nailservices.dto.service.NailServiceRequest;
+import com.nailservices.dto.service.NailServiceResponse;
+import com.nailservices.dto.service.ServiceCategoryDTO;
+import com.nailservices.entity.NailService;
+import com.nailservices.entity.Profile;
+import com.nailservices.entity.ServiceCategory;
 import com.nailservices.exception.NailServicesException;
-import com.nailservices.model.NailService;
-import com.nailservices.model.Profile;
-import com.nailservices.model.ServiceCategory;
 import com.nailservices.repository.NailServiceRepository;
 import com.nailservices.repository.ProfileRepository;
 import com.nailservices.repository.ServiceCategoryRepository;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class NailServiceManager {
+public class NailServiceService {
     private final NailServiceRepository nailServiceRepository;
     private final ServiceCategoryRepository categoryRepository;
     private final ProfileRepository profileRepository;

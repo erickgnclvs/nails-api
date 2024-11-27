@@ -1,4 +1,4 @@
-package com.nailservices.dto;
+package com.nailservices.dto.profile;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
