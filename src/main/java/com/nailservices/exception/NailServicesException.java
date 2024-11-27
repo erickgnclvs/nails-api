@@ -15,6 +15,7 @@ public class NailServicesException extends RuntimeException {
         VALIDATION_ERROR(HttpStatus.BAD_REQUEST),
         UNAUTHORIZED(HttpStatus.UNAUTHORIZED),
         FORBIDDEN(HttpStatus.FORBIDDEN),
+        BAD_REQUEST(HttpStatus.BAD_REQUEST),
         INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR);
 
         @Getter
@@ -53,6 +54,10 @@ public class NailServicesException extends RuntimeException {
 
     public static NailServicesException forbidden(String message) {
         return new NailServicesException(message, ErrorCode.FORBIDDEN);
+    }
+
+    public static NailServicesException badRequest(String message) {
+        return new NailServicesException(message, ErrorCode.BAD_REQUEST);
     }
 
     public static NailServicesException internalError(String message) {

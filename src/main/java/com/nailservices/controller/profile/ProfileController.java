@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,12 +20,14 @@ public class ProfileController {
     private final ProfileService profileService;
 
     @GetMapping("/me")
+    @PreAuthorize("hasAnyRole('CUSTOMER', 'PROVIDER')")
     public ResponseEntity<ProfileResponse> getMyProfile(Authentication authentication) {
         String email = authentication.getName();
         return ResponseEntity.ok(profileService.getProfileByEmail(email));
     }
 
     @PutMapping("/me")
+    @PreAuthorize("hasAnyRole('CUSTOMER', 'PROVIDER')")
     public ResponseEntity<ProfileResponse> updateProfile(
             Authentication authentication,
             @Valid @RequestBody ProfileRequest request) {

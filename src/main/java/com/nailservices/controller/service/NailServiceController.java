@@ -2,23 +2,25 @@ package com.nailservices.controller.service;
 
 import com.nailservices.dto.service.NailServiceRequest;
 import com.nailservices.dto.service.NailServiceResponse;
+import com.nailservices.security.annotation.AuthenticatedAccess;
+import com.nailservices.security.annotation.ProviderAccess;
 import com.nailservices.service.service.NailServiceService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/services")
 @RequiredArgsConstructor
+@AuthenticatedAccess
 public class NailServiceController {
     private final NailServiceService serviceManager;
 
     @PostMapping
-    @PreAuthorize("hasRole('PROVIDER')")
+    @ProviderAccess
     public ResponseEntity<NailServiceResponse> createService(
             @RequestAttribute Long userId,
             @Valid @RequestBody NailServiceRequest request) {
@@ -52,7 +54,7 @@ public class NailServiceController {
     }
 
     @PutMapping("/{serviceId}")
-    @PreAuthorize("hasRole('PROVIDER')")
+    @ProviderAccess
     public ResponseEntity<NailServiceResponse> updateService(
             @PathVariable Long serviceId,
             @RequestAttribute Long userId,
@@ -61,7 +63,7 @@ public class NailServiceController {
     }
 
     @DeleteMapping("/{serviceId}")
-    @PreAuthorize("hasRole('PROVIDER')")
+    @ProviderAccess
     public ResponseEntity<Void> deleteService(
             @PathVariable Long serviceId,
             @RequestAttribute Long userId) {

@@ -1,6 +1,9 @@
 package com.nailservices.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -27,6 +30,14 @@ public class NailService {
 
     private String description;
 
+    /**
+     * Duration of the service in minutes.
+     * Minimum duration is 15 minutes.
+     * Maximum duration is 240 minutes (4 hours).
+     */
+    @NotNull(message = "Duration is required")
+    @Min(value = 15, message = "Duration must be at least 15 minutes")
+    @Max(value = 240, message = "Duration cannot exceed 240 minutes (4 hours)")
     @Column(nullable = false)
     private Integer duration;
 
