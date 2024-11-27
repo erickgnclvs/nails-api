@@ -41,8 +41,20 @@ The application will start on `http://localhost:8080/api`
 ## API Documentation
 
 Once the application is running, you can access the API documentation at:
-- Swagger UI: `http://localhost:8080/api/swagger-ui.html`
-- OpenAPI JSON: `http://localhost:8080/api/api-docs`
+- Swagger UI: `http://localhost:8080/swagger-ui/index.html`
+- OpenAPI Documentation: `http://localhost:8080/v3/api-docs`
+
+### Authentication
+
+The API uses JWT (JSON Web Token) for authentication. To use protected endpoints:
+
+1. First, obtain a JWT token by calling the authentication endpoint
+2. Include the token in the Authorization header of subsequent requests:
+   ```
+   Authorization: Bearer your_jwt_token
+   ```
+
+You can test the authentication flow directly in the Swagger UI, which has built-in support for JWT authentication.
 
 ## Project Structure
 
