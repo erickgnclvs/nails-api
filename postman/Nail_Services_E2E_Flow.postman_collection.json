@@ -1,0 +1,465 @@
+{
+    "info": {
+        "name": "Nail Services - E2E Flow",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "1. Provider Flow",
+            "item": [
+                {
+                    "name": "Register Provider",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Response has token\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData.token).to.exist;",
+                                    "    pm.collectionVariables.set(\"providerToken\", jsonData.token);",
+                                    "    pm.collectionVariables.set(\"providerId\", jsonData.userId);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"provider@test.com\",\n    \"password\": \"Test123!\",\n    \"firstName\": \"Jane\",\n    \"lastName\": \"Provider\",\n    \"role\": \"PROVIDER\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/v1/auth/register",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["api", "v1", "auth", "register"]
+                        }
+                    }
+                },
+                {
+                    "name": "Set Weekly Schedule",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{providerToken}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"dayOfWeek\": \"MONDAY\",\n    \"startTime\": \"09:00\",\n    \"endTime\": \"17:00\",\n    \"slotDuration\": 60\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/v1/schedules",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["api", "v1", "schedules"]
+                        }
+                    }
+                },
+                {
+                    "name": "Generate Time Slots",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{providerToken}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/v1/slots/generate?startDate={{startDate}}&endDate={{endDate}}",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["api", "v1", "slots", "generate"],
+                            "query": [
+                                {
+                                    "key": "startDate",
+                                    "value": "{{startDate}}"
+                                },
+                                {
+                                    "key": "endDate",
+                                    "value": "{{endDate}}"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "2. Customer Flow",
+            "item": [
+                {
+                    "name": "Register Customer",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Response has token\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData.token).to.exist;",
+                                    "    pm.collectionVariables.set(\"customerToken\", jsonData.token);",
+                                    "    pm.collectionVariables.set(\"customerId\", jsonData.userId);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"customer@test.com\",\n    \"password\": \"Test123!\",\n    \"firstName\": \"John\",\n    \"lastName\": \"Customer\",\n    \"role\": \"CUSTOMER\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/v1/auth/register",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["api", "v1", "auth", "register"]
+                        }
+                    }
+                },
+                {
+                    "name": "View Provider Schedule",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{customerToken}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/v1/schedules/provider/{{providerId}}",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["api", "v1", "schedules", "provider", "{{providerId}}"]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Available Slots",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Response has available slots\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData).to.be.an('array');",
+                                    "    if (jsonData.length > 0) {",
+                                    "        pm.collectionVariables.set(\"slotId\", jsonData[0].id);",
+                                    "    }",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{customerToken}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/v1/slots/provider/{{providerId}}/available?startDate={{startDate}}&endDate={{endDate}}",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["api", "v1", "slots", "provider", "{{providerId}}", "available"],
+                            "query": [
+                                {
+                                    "key": "startDate",
+                                    "value": "{{startDate}}"
+                                },
+                                {
+                                    "key": "endDate",
+                                    "value": "{{endDate}}"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Book Appointment",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Response has appointment details\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData.id).to.exist;",
+                                    "    pm.collectionVariables.set(\"appointmentId\", jsonData.id);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{customerToken}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"providerId\": {{providerId}},\n    \"serviceId\": {{serviceId}},\n    \"slotId\": {{slotId}}\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/v1/appointments",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["api", "v1", "appointments"]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "3. Edge Cases",
+            "item": [
+                {
+                    "name": "Try to Book Already Booked Slot",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 400\", function () {",
+                                    "    pm.response.to.have.status(400);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{customerToken}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"providerId\": {{providerId}},\n    \"serviceId\": {{serviceId}},\n    \"slotId\": {{slotId}}\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/v1/appointments",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["api", "v1", "appointments"]
+                        }
+                    }
+                },
+                {
+                    "name": "Try to Book Past Slot",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 400\", function () {",
+                                    "    pm.response.to.have.status(400);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{customerToken}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"providerId\": {{providerId}},\n    \"serviceId\": {{serviceId}},\n    \"slotId\": \"past-slot-id\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/v1/appointments",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["api", "v1", "appointments"]
+                        }
+                    }
+                },
+                {
+                    "name": "Try to Cancel Non-existent Appointment",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 404\", function () {",
+                                    "    pm.response.to.have.status(404);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{customerToken}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/v1/appointments/99999",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["api", "v1", "appointments", "99999"]
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "http://localhost:8080"
+        },
+        {
+            "key": "providerToken",
+            "value": ""
+        },
+        {
+            "key": "customerToken",
+            "value": ""
+        },
+        {
+            "key": "providerId",
+            "value": ""
+        },
+        {
+            "key": "customerId",
+            "value": ""
+        },
+        {
+            "key": "serviceId",
+            "value": "1"
+        },
+        {
+            "key": "slotId",
+            "value": ""
+        },
+        {
+            "key": "appointmentId",
+            "value": ""
+        },
+        {
+            "key": "startDate",
+            "value": "2024-01-01T00:00:00"
+        },
+        {
+            "key": "endDate",
+            "value": "2024-01-07T23:59:59"
+        }
+    ]
+}

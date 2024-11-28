@@ -7,10 +7,13 @@ import com.nailservices.dto.service.NailServiceResponse;
 import com.nailservices.entity.Appointment;
 import com.nailservices.entity.AppointmentStatus;
 import com.nailservices.entity.NailService;
+import com.nailservices.entity.TimeSlot;
+import com.nailservices.entity.TimeSlotStatus;
 import com.nailservices.entity.User;
 import com.nailservices.exception.NailServicesException;
 import com.nailservices.repository.AppointmentRepository;
 import com.nailservices.repository.NailServiceRepository;
+import com.nailservices.repository.TimeSlotRepository;
 import com.nailservices.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,53 +30,54 @@ public class AppointmentService {
     private final AppointmentRepository appointmentRepository;
     private final UserRepository userRepository;
     private final NailServiceRepository nailServiceRepository;
+    private final TimeSlotRepository timeSlotRepository;
 
     @Transactional
     public AppointmentResponse createAppointment(Long customerId, AppointmentRequest request) {
+        // Get and validate customer
         User customer = userRepository.findById(customerId)
                 .orElseThrow(() -> NailServicesException.resourceNotFound("Customer not found"));
 
-        User provider = userRepository.findById(request.getProviderId())
-                .orElseThrow(() -> NailServicesException.resourceNotFound("Provider not found"));
+        // Get and validate time slot
+        TimeSlot timeSlot = timeSlotRepository.findById(request.getTimeSlotId())
+                .orElseThrow(() -> NailServicesException.resourceNotFound("Time slot not found"));
 
+        // Validate time slot belongs to provider
+        if (!timeSlot.getProvider().getId().equals(request.getProviderId())) {
+            throw NailServicesException.badRequest("Time slot does not belong to the specified provider");
+        }
+
+        // Validate time slot is available
+        if (timeSlot.getStatus() != TimeSlotStatus.AVAILABLE) {
+            throw NailServicesException.badRequest("Selected time slot is not available");
+        }
+
+        // Validate time slot is in the future
+        if (timeSlot.getStartTime().isBefore(LocalDateTime.now())) {
+            throw NailServicesException.badRequest("Cannot book past time slots");
+        }
+
+        // Get and validate service
         NailService service = nailServiceRepository.findById(request.getServiceId())
                 .orElseThrow(() -> NailServicesException.resourceNotFound("Service not found"));
 
-        // Validate service is active
         if (!service.getIsActive()) {
             throw NailServicesException.badRequest("This service is no longer available");
         }
 
-        // Validate appointment time is in the future
-        if (request.getStartTime().isBefore(LocalDateTime.now())) {
-            throw NailServicesException.badRequest("Appointment time must be in the future");
-        }
-
-        // Validate service duration
-        if (service.getDuration() == null || service.getDuration() < 15) {
-            throw NailServicesException.badRequest("Invalid service duration. Duration must be at least 15 minutes");
-        }
-        if (service.getDuration() > 240) {
-            throw NailServicesException.badRequest("Invalid service duration. Duration cannot exceed 4 hours");
-        }
-
-        // Calculate end time based on service duration
-        LocalDateTime endTime = request.getStartTime().plusMinutes(service.getDuration());
-
-        // Check for overlapping appointments
-        if (appointmentRepository.hasOverlappingAppointments(provider.getId(), request.getStartTime(), endTime)) {
-            throw NailServicesException.badRequest("Provider is not available at this time");
-        }
-
+        // Create appointment
         Appointment appointment = Appointment.builder()
                 .customer(customer)
-                .provider(provider)
+                .provider(timeSlot.getProvider())
                 .service(service)
-                .startTime(request.getStartTime())
-                .endTime(endTime)
+                .timeSlot(timeSlot)
                 .status(AppointmentStatus.PENDING)
                 .notes(request.getNotes())
                 .build();
+
+        // Update time slot status
+        timeSlot.setStatus(TimeSlotStatus.BOOKED);
+        timeSlotRepository.save(timeSlot);
 
         return mapToResponse(appointmentRepository.save(appointment));
     }
@@ -104,28 +108,64 @@ public class AppointmentService {
     }
 
     @Transactional
-    public AppointmentResponse updateAppointmentStatus(Long appointmentId, AppointmentStatus status) {
-        Appointment appointment = findAppointmentById(appointmentId);
-        appointment.setStatus(status);
+    public AppointmentResponse updateAppointmentStatus(Long appointmentId, AppointmentStatus newStatus) {
+        Appointment appointment = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> NailServicesException.resourceNotFound("Appointment not found"));
+
+        // If appointment is already in final state, don't allow updates
+        if (appointment.getStatus() == AppointmentStatus.COMPLETED || 
+            appointment.getStatus() == AppointmentStatus.CANCELLED) {
+            throw NailServicesException.badRequest("Cannot update appointment in final state: " + appointment.getStatus());
+        }
+
+        // Update time slot status based on appointment status
+        TimeSlot timeSlot = timeSlotRepository.findById(appointment.getTimeSlot().getId())
+                .orElseThrow(() -> NailServicesException.resourceNotFound("Time slot not found"));
+
+        switch (newStatus) {
+            case CANCELLED:
+                timeSlot.setStatus(TimeSlotStatus.AVAILABLE);
+                break;
+            case COMPLETED:
+                timeSlot.setStatus(TimeSlotStatus.PAST);
+                break;
+            case CONFIRMED:
+                timeSlot.setStatus(TimeSlotStatus.BOOKED);
+                break;
+            default:
+                // For other statuses, keep the current time slot status
+                break;
+        }
+
+        // Update appointment status
+        appointment.setStatus(newStatus);
+        
+        // Save changes
+        timeSlotRepository.save(timeSlot);
         return mapToResponse(appointmentRepository.save(appointment));
     }
 
     @Transactional
-    public void cancelAppointment(Long appointmentId, Long userId) {
-        Appointment appointment = findAppointmentById(appointmentId);
-        
-        // Verify that the user is either the customer or provider
-        if (!appointment.getCustomer().getId().equals(userId) && 
-            !appointment.getProvider().getId().equals(userId)) {
-            throw NailServicesException.forbidden("You are not authorized to cancel this appointment");
-        }
+    public void cancelAppointment(Long appointmentId, String reason) {
+        Appointment appointment = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> NailServicesException.resourceNotFound("Appointment not found"));
 
+        // Only allow cancellation of pending or confirmed appointments
         if (appointment.getStatus() != AppointmentStatus.PENDING && 
             appointment.getStatus() != AppointmentStatus.CONFIRMED) {
             throw NailServicesException.badRequest("Cannot cancel appointment with status: " + appointment.getStatus());
         }
 
+        // Update time slot status
+        TimeSlot timeSlot = timeSlotRepository.findById(appointment.getTimeSlot().getId())
+                .orElseThrow(() -> NailServicesException.resourceNotFound("Time slot not found"));
+        
+        timeSlot.setStatus(TimeSlotStatus.AVAILABLE);
+        timeSlotRepository.save(timeSlot);
+
+        // Update appointment
         appointment.setStatus(AppointmentStatus.CANCELLED);
+        appointment.setNotes(appointment.getNotes() + "\nCancellation reason: " + reason);
         appointmentRepository.save(appointment);
     }
 
@@ -135,17 +175,18 @@ public class AppointmentService {
     }
 
     private AppointmentResponse mapToResponse(Appointment appointment) {
-        AppointmentResponse response = new AppointmentResponse();
-        response.setId(appointment.getId());
-        response.setCustomer(ProfileResponse.fromProfile(appointment.getCustomer().getProfile()));
-        response.setProvider(ProfileResponse.fromProfile(appointment.getProvider().getProfile()));
-        response.setService(NailServiceResponse.fromNailService(appointment.getService()));
-        response.setStartTime(appointment.getStartTime());
-        response.setEndTime(appointment.getEndTime());
-        response.setStatus(appointment.getStatus());
-        response.setNotes(appointment.getNotes());
-        response.setCreatedAt(appointment.getCreatedAt());
-        response.setUpdatedAt(appointment.getUpdatedAt());
-        return response;
+        return AppointmentResponse.builder()
+                .id(appointment.getId())
+                .customer(ProfileResponse.fromProfile(appointment.getCustomer().getProfile()))
+                .provider(ProfileResponse.fromProfile(appointment.getProvider().getProfile()))
+                .service(NailServiceResponse.fromNailService(appointment.getService()))
+                .timeSlotId(appointment.getTimeSlot().getId())
+                .startTime(appointment.getTimeSlot().getStartTime())
+                .endTime(appointment.getTimeSlot().getEndTime())
+                .status(appointment.getStatus())
+                .notes(appointment.getNotes())
+                .createdAt(appointment.getCreatedAt())
+                .updatedAt(appointment.getUpdatedAt())
+                .build();
     }
 }

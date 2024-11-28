@@ -1,0 +1,148 @@
+{
+    "info": {
+        "name": "Nail Services - Weekly Schedule Tests",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Set Weekly Schedule",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Status code is 200\", function () {",
+                            "    pm.response.to.have.status(200);",
+                            "});",
+                            "",
+                            "pm.test(\"Response has schedule details\", function () {",
+                            "    var jsonData = pm.response.json();",
+                            "    pm.expect(jsonData.id).to.exist;",
+                            "    pm.expect(jsonData.dayOfWeek).to.exist;",
+                            "    pm.expect(jsonData.startTime).to.exist;",
+                            "    pm.expect(jsonData.endTime).to.exist;",
+                            "    pm.collectionVariables.set(\"scheduleId\", jsonData.id);",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{providerToken}}",
+                        "type": "text"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"dayOfWeek\": \"MONDAY\",\n    \"startTime\": \"09:00\",\n    \"endTime\": \"17:00\",\n    \"slotDuration\": 60\n}",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    }
+                },
+                "url": {
+                    "raw": "{{baseUrl}}/api/v1/schedules",
+                    "host": ["{{baseUrl}}"],
+                    "path": ["api", "v1", "schedules"]
+                }
+            }
+        },
+        {
+            "name": "Get Provider Schedule",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Status code is 200\", function () {",
+                            "    pm.response.to.have.status(200);",
+                            "});",
+                            "",
+                            "pm.test(\"Response is an array of schedules\", function () {",
+                            "    var jsonData = pm.response.json();",
+                            "    pm.expect(jsonData).to.be.an('array');",
+                            "    if (jsonData.length > 0) {",
+                            "        pm.expect(jsonData[0].id).to.exist;",
+                            "        pm.expect(jsonData[0].dayOfWeek).to.exist;",
+                            "        pm.expect(jsonData[0].startTime).to.exist;",
+                            "        pm.expect(jsonData[0].endTime).to.exist;",
+                            "    }",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{customerToken}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/api/v1/schedules/provider/{{providerId}}",
+                    "host": ["{{baseUrl}}"],
+                    "path": ["api", "v1", "schedules", "provider", "{{providerId}}"]
+                }
+            }
+        },
+        {
+            "name": "Get Provider Working Days",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Status code is 200\", function () {",
+                            "    pm.response.to.have.status(200);",
+                            "});",
+                            "",
+                            "pm.test(\"Response is an array of working days\", function () {",
+                            "    var jsonData = pm.response.json();",
+                            "    pm.expect(jsonData).to.be.an('array');",
+                            "    if (jsonData.length > 0) {",
+                            "        pm.expect(jsonData[0].dayOfWeek).to.exist;",
+                            "    }",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{customerToken}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/api/v1/schedules/provider/{{providerId}}/working-days",
+                    "host": ["{{baseUrl}}"],
+                    "path": ["api", "v1", "schedules", "provider", "{{providerId}}", "working-days"]
+                }
+            }
+        }
+    ],
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "http://localhost:8080"
+        },
+        {
+            "key": "scheduleId",
+            "value": ""
+        }
+    ]
+}

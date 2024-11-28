@@ -1,4 +1,4 @@
-package com.nailservices.service.profile;
+package com.nailservices.service;
 
 import com.nailservices.dto.profile.ProfileRequest;
 import com.nailservices.dto.profile.ProfileResponse;
@@ -18,6 +18,29 @@ public class ProfileService {
     private final UserRepository userRepository;
     
     private final ProfileRepository profileRepository;
+
+    @Transactional
+    public ProfileResponse createProfile(String email, ProfileRequest request) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> NailServicesException.resourceNotFound("User"));
+
+        if (profileRepository.findByUserId(user.getId()).isPresent()) {
+            throw NailServicesException.badRequest("Profile already exists for this user");
+        }
+
+        Profile profile = new Profile();
+        profile.setUser(user);
+        profile.setFirstName(request.getFirstName());
+        profile.setLastName(request.getLastName());
+        profile.setBio(request.getBio());
+        profile.setPhoneNumber(request.getPhoneNumber());
+        profile.setAddress(request.getAddress());
+        profile.setProfileImageUrl(request.getProfileImageUrl());
+        profile.setBusinessName(request.getBusinessName());
+
+        profile = profileRepository.save(profile);
+        return ProfileResponse.fromProfile(profile);
+    }
 
     @Transactional(readOnly = true)
     public ProfileResponse getProfileByEmail(String email) {

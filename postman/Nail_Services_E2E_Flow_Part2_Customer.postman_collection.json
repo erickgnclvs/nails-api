@@ -1,0 +1,305 @@
+{
+    "info": {
+        "name": "Nail Services - E2E Flow Part 2 - Customer Flow",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "1. Register Customer",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Status code is 200\", function () {",
+                            "    pm.response.to.have.status(200);",
+                            "});",
+                            "",
+                            "pm.test(\"Response has user ID\", function () {",
+                            "    var jsonData = pm.response.json();",
+                            "    pm.expect(jsonData.userId).to.exist;",
+                            "    pm.collectionVariables.set(\"customerId\", jsonData.userId);",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"email\": \"customer@example.com\",\n    \"password\": \"password123\",\n    \"role\": \"CUSTOMER\",\n    \"firstName\": \"Jane\",\n    \"lastName\": \"Smith\",\n    \"phoneNumber\": \"+1987654321\"\n}",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    }
+                },
+                "url": {
+                    "raw": "{{baseUrl}}/api/v1/auth/register",
+                    "host": ["{{baseUrl}}"],
+                    "path": ["api", "v1", "auth", "register"]
+                }
+            }
+        },
+        {
+            "name": "2. Login Customer",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Status code is 200\", function () {",
+                            "    pm.response.to.have.status(200);",
+                            "});",
+                            "",
+                            "pm.test(\"Response has token\", function () {",
+                            "    var jsonData = pm.response.json();",
+                            "    pm.expect(jsonData.token).to.exist;",
+                            "    pm.collectionVariables.set(\"customerToken\", jsonData.token);",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"email\": \"customer@example.com\",\n    \"password\": \"password123\"\n}",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    }
+                },
+                "url": {
+                    "raw": "{{baseUrl}}/api/v1/auth/login",
+                    "host": ["{{baseUrl}}"],
+                    "path": ["api", "v1", "auth", "login"]
+                }
+            }
+        },
+        {
+            "name": "3. Create Customer Profile",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Status code is 200\", function () {",
+                            "    pm.response.to.have.status(200);",
+                            "});",
+                            "",
+                            "pm.test(\"Profile created successfully\", function () {",
+                            "    var jsonData = pm.response.json();",
+                            "    pm.expect(jsonData.userId).to.exist;",
+                            "    pm.expect(jsonData.profileType).to.equal('CUSTOMER');",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{customerToken}}",
+                        "type": "text"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"firstName\": \"Jane\",\n    \"lastName\": \"Smith\",\n    \"phoneNumber\": \"+1987654321\"\n}",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    }
+                },
+                "url": {
+                    "raw": "{{baseUrl}}/api/v1/profiles",
+                    "host": ["{{baseUrl}}"],
+                    "path": ["api", "v1", "profiles"]
+                }
+            }
+        },
+        {
+            "name": "4. View Available Time Slots",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Status code is 200\", function () {",
+                            "    pm.response.to.have.status(200);",
+                            "});",
+                            "",
+                            "pm.test(\"Response has time slots\", function () {",
+                            "    var jsonData = pm.response.json();",
+                            "    pm.expect(jsonData.content).to.exist;",
+                            "    if (jsonData.content.length > 0) {",
+                            "        pm.collectionVariables.set(\"timeSlotId\", jsonData.content[0].id);",
+                            "    }",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{customerToken}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/api/v1/timeslots/provider/{{providerId}}?page=0&size=10",
+                    "host": ["{{baseUrl}}"],
+                    "path": ["api", "v1", "timeslots", "provider", "{{providerId}}"],
+                    "query": [
+                        {
+                            "key": "page",
+                            "value": "0"
+                        },
+                        {
+                            "key": "size",
+                            "value": "10"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "5. Create Appointment",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Status code is 200\", function () {",
+                            "    pm.response.to.have.status(200);",
+                            "});",
+                            "",
+                            "pm.test(\"Appointment created successfully\", function () {",
+                            "    var jsonData = pm.response.json();",
+                            "    pm.expect(jsonData.userId).to.exist;",
+                            "    pm.collectionVariables.set(\"appointmentId\", jsonData.userId);",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{customerToken}}",
+                        "type": "text"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"providerId\": \"{{providerId}}\",\n    \"serviceId\": \"{{serviceId}}\",\n    \"timeSlotId\": \"{{timeSlotId}}\",\n    \"notes\": \"First time customer\"\n}",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    }
+                },
+                "url": {
+                    "raw": "{{baseUrl}}/api/v1/appointments",
+                    "host": ["{{baseUrl}}"],
+                    "path": ["api", "v1", "appointments"]
+                }
+            }
+        },
+        {
+            "name": "6. View Customer Appointments",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Status code is 200\", function () {",
+                            "    pm.response.to.have.status(200);",
+                            "});",
+                            "",
+                            "pm.test(\"Response has appointments\", function () {",
+                            "    var jsonData = pm.response.json();",
+                            "    pm.expect(jsonData.content).to.exist;",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{customerToken}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/api/v1/appointments/customer?page=0&size=10",
+                    "host": ["{{baseUrl}}"],
+                    "path": ["api", "v1", "appointments", "customer"],
+                    "query": [
+                        {
+                            "key": "page",
+                            "value": "0"
+                        },
+                        {
+                            "key": "size",
+                            "value": "10"
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "http://localhost:8080"
+        },
+        {
+            "key": "customerId",
+            "value": ""
+        },
+        {
+            "key": "customerToken",
+            "value": ""
+        },
+        {
+            "key": "providerId",
+            "value": ""
+        },
+        {
+            "key": "serviceId",
+            "value": ""
+        },
+        {
+            "key": "timeSlotId",
+            "value": ""
+        },
+        {
+            "key": "appointmentId",
+            "value": ""
+        }
+    ]
+}

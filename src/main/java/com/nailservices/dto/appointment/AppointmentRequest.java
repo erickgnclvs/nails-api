@@ -1,12 +1,15 @@
 package com.nailservices.dto.appointment;
 
-import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-
-import java.time.LocalDateTime;
+import lombok.NoArgsConstructor;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class AppointmentRequest {
     @NotNull(message = "Provider ID is required")
     private Long providerId;
@@ -14,9 +17,8 @@ public class AppointmentRequest {
     @NotNull(message = "Service ID is required")
     private Long serviceId;
 
-    @NotNull(message = "Start time is required")
-    @Future(message = "Start time must be in the future")
-    private LocalDateTime startTime;
+    @NotNull(message = "Time slot ID is required")
+    private Long timeSlotId;
 
     private String notes;
 }

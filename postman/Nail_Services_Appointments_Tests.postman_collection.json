@@ -1,0 +1,295 @@
+{
+    "info": {
+        "name": "Nail Services - Appointments Tests",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Create Appointment",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Status code is 200\", function () {",
+                            "    pm.response.to.have.status(200);",
+                            "});",
+                            "",
+                            "pm.test(\"Response has appointment ID\", function () {",
+                            "    var jsonData = pm.response.json();",
+                            "    pm.expect(jsonData.id).to.exist;",
+                            "    pm.collectionVariables.set(\"appointmentId\", jsonData.id);",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{customerToken}}",
+                        "type": "text"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"providerId\": {{providerId}},\n    \"serviceId\": {{serviceId}},\n    \"slotId\": {{slotId}}\n}",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    }
+                },
+                "url": {
+                    "raw": "{{baseUrl}}/api/v1/appointments",
+                    "host": ["{{baseUrl}}"],
+                    "path": ["api", "v1", "appointments"]
+                }
+            }
+        },
+        {
+            "name": "Get Customer Appointments",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Status code is 200\", function () {",
+                            "    pm.response.to.have.status(200);",
+                            "});",
+                            "",
+                            "pm.test(\"Response is paginated\", function () {",
+                            "    var jsonData = pm.response.json();",
+                            "    pm.expect(jsonData.content).to.exist;",
+                            "    pm.expect(jsonData.totalElements).to.exist;",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{customerToken}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/api/v1/appointments/customer?page=0&size=10",
+                    "host": ["{{baseUrl}}"],
+                    "path": ["api", "v1", "appointments", "customer"],
+                    "query": [
+                        {
+                            "key": "page",
+                            "value": "0"
+                        },
+                        {
+                            "key": "size",
+                            "value": "10"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Get Provider Appointments",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Status code is 200\", function () {",
+                            "    pm.response.to.have.status(200);",
+                            "});",
+                            "",
+                            "pm.test(\"Response is paginated\", function () {",
+                            "    var jsonData = pm.response.json();",
+                            "    pm.expect(jsonData.content).to.exist;",
+                            "    pm.expect(jsonData.totalElements).to.exist;",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{providerToken}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/api/v1/appointments/provider?page=0&size=10",
+                    "host": ["{{baseUrl}}"],
+                    "path": ["api", "v1", "appointments", "provider"],
+                    "query": [
+                        {
+                            "key": "page",
+                            "value": "0"
+                        },
+                        {
+                            "key": "size",
+                            "value": "10"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Get Provider Schedule",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Status code is 200\", function () {",
+                            "    pm.response.to.have.status(200);",
+                            "});",
+                            "",
+                            "pm.test(\"Response is an array\", function () {",
+                            "    var jsonData = pm.response.json();",
+                            "    pm.expect(jsonData).to.be.an('array');",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{providerToken}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/api/v1/appointments/provider/schedule?start={{startDate}}&end={{endDate}}",
+                    "host": ["{{baseUrl}}"],
+                    "path": ["api", "v1", "appointments", "provider", "schedule"],
+                    "query": [
+                        {
+                            "key": "start",
+                            "value": "{{startDate}}"
+                        },
+                        {
+                            "key": "end",
+                            "value": "{{endDate}}"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Update Appointment Status",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Status code is 200\", function () {",
+                            "    pm.response.to.have.status(200);",
+                            "});",
+                            "",
+                            "pm.test(\"Response has updated status\", function () {",
+                            "    var jsonData = pm.response.json();",
+                            "    pm.expect(jsonData.status).to.equal(pm.variables.get(\"newStatus\"));",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "PATCH",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{providerToken}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/api/v1/appointments/{{appointmentId}}/status?status={{newStatus}}",
+                    "host": ["{{baseUrl}}"],
+                    "path": ["api", "v1", "appointments", "{{appointmentId}}", "status"],
+                    "query": [
+                        {
+                            "key": "status",
+                            "value": "{{newStatus}}"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Cancel Appointment",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Status code is 204\", function () {",
+                            "    pm.response.to.have.status(204);",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "DELETE",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{customerToken}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/api/v1/appointments/{{appointmentId}}?reason=Customer cancelled",
+                    "host": ["{{baseUrl}}"],
+                    "path": ["api", "v1", "appointments", "{{appointmentId}}"],
+                    "query": [
+                        {
+                            "key": "reason",
+                            "value": "Customer cancelled"
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "http://localhost:8080"
+        },
+        {
+            "key": "appointmentId",
+            "value": ""
+        },
+        {
+            "key": "startDate",
+            "value": "2024-01-01T00:00:00"
+        },
+        {
+            "key": "endDate",
+            "value": "2024-01-07T23:59:59"
+        },
+        {
+            "key": "newStatus",
+            "value": "CONFIRMED"
+        }
+    ]
+}

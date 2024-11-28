@@ -1,10 +1,10 @@
-package com.nailservices.controller.service;
+package com.nailservices.controller;
 
 import com.nailservices.dto.service.NailServiceRequest;
 import com.nailservices.dto.service.NailServiceResponse;
 import com.nailservices.security.annotation.AuthenticatedAccess;
 import com.nailservices.security.annotation.ProviderAccess;
-import com.nailservices.service.service.NailServiceService;
+import com.nailservices.service.NailServiceService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

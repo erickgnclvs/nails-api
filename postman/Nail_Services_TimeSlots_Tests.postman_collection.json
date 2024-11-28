@@ -1,0 +1,161 @@
+{
+    "info": {
+        "name": "Nail Services - Time Slots Tests",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Generate Time Slots",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Status code is 200\", function () {",
+                            "    pm.response.to.have.status(200);",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{providerToken}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/api/v1/slots/generate?startDate={{startDate}}&endDate={{endDate}}",
+                    "host": ["{{baseUrl}}"],
+                    "path": ["api", "v1", "slots", "generate"],
+                    "query": [
+                        {
+                            "key": "startDate",
+                            "value": "{{startDate}}"
+                        },
+                        {
+                            "key": "endDate",
+                            "value": "{{endDate}}"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Get Available Slots",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Status code is 200\", function () {",
+                            "    pm.response.to.have.status(200);",
+                            "});",
+                            "",
+                            "pm.test(\"Response is an array of time slots\", function () {",
+                            "    var jsonData = pm.response.json();",
+                            "    pm.expect(jsonData).to.be.an('array');",
+                            "    if (jsonData.length > 0) {",
+                            "        pm.expect(jsonData[0].id).to.exist;",
+                            "        pm.expect(jsonData[0].startTime).to.exist;",
+                            "        pm.expect(jsonData[0].endTime).to.exist;",
+                            "        pm.expect(jsonData[0].status).to.equal('AVAILABLE');",
+                            "        pm.collectionVariables.set(\"slotId\", jsonData[0].id);",
+                            "    }",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{customerToken}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/api/v1/slots/provider/{{providerId}}/available?startDate={{startDate}}&endDate={{endDate}}",
+                    "host": ["{{baseUrl}}"],
+                    "path": ["api", "v1", "slots", "provider", "{{providerId}}", "available"],
+                    "query": [
+                        {
+                            "key": "startDate",
+                            "value": "{{startDate}}"
+                        },
+                        {
+                            "key": "endDate",
+                            "value": "{{endDate}}"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Update Slot Status",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Status code is 200\", function () {",
+                            "    pm.response.to.have.status(200);",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "PATCH",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{providerToken}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/api/v1/slots/{{slotId}}/status?status={{slotStatus}}",
+                    "host": ["{{baseUrl}}"],
+                    "path": ["api", "v1", "slots", "{{slotId}}", "status"],
+                    "query": [
+                        {
+                            "key": "status",
+                            "value": "{{slotStatus}}"
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "http://localhost:8080"
+        },
+        {
+            "key": "slotId",
+            "value": ""
+        },
+        {
+            "key": "startDate",
+            "value": "2024-01-01T00:00:00"
+        },
+        {
+            "key": "endDate",
+            "value": "2024-01-07T23:59:59"
+        },
+        {
+            "key": "slotStatus",
+            "value": "BLOCKED"
+        }
+    ]
+}

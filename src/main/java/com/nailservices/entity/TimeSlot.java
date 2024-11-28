@@ -8,13 +8,13 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Data
 @Entity
-@Builder(toBuilder = true)
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "appointments")
-public class Appointment {
+@Table(name = "time_slots")
+public class TimeSlot {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,23 +23,22 @@ public class Appointment {
     @JoinColumn(name = "provider_id", nullable = false)
     private User provider;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id", nullable = false)
-    private User customer;
+    @Column(nullable = false)
+    private LocalDateTime startTime;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "service_id", nullable = false)
-    private NailService service;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "time_slot_id", nullable = false)
-    private TimeSlot timeSlot;
+    @Column(nullable = false)
+    private LocalDateTime endTime;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private AppointmentStatus status;
+    private TimeSlotStatus status;
 
-    private String notes;
+    @Column(nullable = false)
+    private boolean isEnabled;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "weekly_schedule_id", nullable = false)
+    private WeeklySchedule weeklySchedule;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
@@ -51,14 +50,10 @@ public class Appointment {
     protected void onCreate() {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
-        if (status == null) {
-            status = AppointmentStatus.PENDING;
-        }
     }
 
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
-
 }

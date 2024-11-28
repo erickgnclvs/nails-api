@@ -1,4 +1,4 @@
-package com.nailservices.service.service;
+package com.nailservices.service;
 
 import com.nailservices.dto.service.NailServiceRequest;
 import com.nailservices.dto.service.NailServiceResponse;

@@ -1,9 +1,9 @@
-package com.nailservices.controller.auth;
+package com.nailservices.controller;
 
 import com.nailservices.dto.auth.AuthResponse;
 import com.nailservices.dto.auth.LoginRequest;
 import com.nailservices.dto.auth.RegisterRequest;
-import com.nailservices.service.auth.AuthService;
+import com.nailservices.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

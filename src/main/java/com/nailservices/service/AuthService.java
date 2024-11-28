@@ -1,4 +1,4 @@
-package com.nailservices.service.auth;
+package com.nailservices.service;
 
 import com.nailservices.dto.auth.AuthResponse;
 import com.nailservices.dto.auth.LoginRequest;
