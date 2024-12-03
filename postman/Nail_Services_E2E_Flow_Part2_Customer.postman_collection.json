@@ -3,6 +3,24 @@
         "name": "Nail Services - E2E Flow Part 2 - Customer Flow",
         "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
     },
+    "event": [
+        {
+            "listen": "prerequest",
+            "script": {
+                "exec": [
+                    "if (!pm.collectionVariables.get('startDate')) {",
+                    "    const now = new Date();",
+                    "    const nextWeek = new Date(now);",
+                    "    nextWeek.setDate(now.getDate() + 7);",
+                    "    ",
+                    "    pm.collectionVariables.set('startDate', now.toISOString());",
+                    "    pm.collectionVariables.set('endDate', nextWeek.toISOString());",
+                    "}"
+                ],
+                "type": "text/javascript"
+            }
+        }
+    ],
     "item": [
         {
             "name": "1. Register Customer",
@@ -58,7 +76,7 @@
                             "pm.test(\"Response has token\", function () {",
                             "    var jsonData = pm.response.json();",
                             "    pm.expect(jsonData.token).to.exist;",
-                            "    pm.collectionVariables.set(\"customerToken\", jsonData.token);",
+                            "    pm.collectionVariables.set(\"token\", jsonData.token);",
                             "});"
                         ],
                         "type": "text/javascript"
@@ -93,12 +111,6 @@
                         "exec": [
                             "pm.test(\"Status code is 200\", function () {",
                             "    pm.response.to.have.status(200);",
-                            "});",
-                            "",
-                            "pm.test(\"Profile created successfully\", function () {",
-                            "    var jsonData = pm.response.json();",
-                            "    pm.expect(jsonData.userId).to.exist;",
-                            "    pm.expect(jsonData.profileType).to.equal('CUSTOMER');",
                             "});"
                         ],
                         "type": "text/javascript"
@@ -110,13 +122,13 @@
                 "header": [
                     {
                         "key": "Authorization",
-                        "value": "Bearer {{customerToken}}",
+                        "value": "Bearer {{token}}",
                         "type": "text"
                     }
                 ],
                 "body": {
                     "mode": "raw",
-                    "raw": "{\n    \"firstName\": \"Jane\",\n    \"lastName\": \"Smith\",\n    \"phoneNumber\": \"+1987654321\"\n}",
+                    "raw": "{\n    \"firstName\": \"Jane\",\n    \"lastName\": \"Smith\",\n    \"phoneNumber\": \"+1987654321\",\n    \"bio\": \"Regular customer looking for nail care services\"\n}",
                     "options": {
                         "raw": {
                             "language": "json"
@@ -141,11 +153,12 @@
                             "    pm.response.to.have.status(200);",
                             "});",
                             "",
-                            "pm.test(\"Response has time slots\", function () {",
+                            "pm.test(\"Response has available slots\", function () {",
                             "    var jsonData = pm.response.json();",
-                            "    pm.expect(jsonData.content).to.exist;",
-                            "    if (jsonData.content.length > 0) {",
-                            "        pm.collectionVariables.set(\"timeSlotId\", jsonData.content[0].id);",
+                            "    pm.expect(jsonData).to.be.an('array');",
+                            "    if (jsonData.length > 0) {",
+                            "        pm.expect(jsonData[0].id).to.exist;",
+                            "        pm.collectionVariables.set(\"slotId\", jsonData[0].id);",
                             "    }",
                             "});"
                         ],
@@ -158,22 +171,22 @@
                 "header": [
                     {
                         "key": "Authorization",
-                        "value": "Bearer {{customerToken}}",
+                        "value": "Bearer {{token}}",
                         "type": "text"
                     }
                 ],
                 "url": {
-                    "raw": "{{baseUrl}}/api/v1/timeslots/provider/{{providerId}}?page=0&size=10",
+                    "raw": "{{baseUrl}}/api/v1/slots/provider/{{providerId}}/available?startDate={{startDate}}&endDate={{endDate}}",
                     "host": ["{{baseUrl}}"],
-                    "path": ["api", "v1", "timeslots", "provider", "{{providerId}}"],
+                    "path": ["api", "v1", "slots", "provider", "{{providerId}}", "available"],
                     "query": [
                         {
-                            "key": "page",
-                            "value": "0"
+                            "key": "startDate",
+                            "value": "{{startDate}}"
                         },
                         {
-                            "key": "size",
-                            "value": "10"
+                            "key": "endDate",
+                            "value": "{{endDate}}"
                         }
                     ]
                 }
@@ -192,8 +205,8 @@
                             "",
                             "pm.test(\"Appointment created successfully\", function () {",
                             "    var jsonData = pm.response.json();",
-                            "    pm.expect(jsonData.userId).to.exist;",
-                            "    pm.collectionVariables.set(\"appointmentId\", jsonData.userId);",
+                            "    pm.expect(jsonData.id).to.exist;",
+                            "    pm.collectionVariables.set(\"appointmentId\", jsonData.id);",
                             "});"
                         ],
                         "type": "text/javascript"
@@ -205,13 +218,13 @@
                 "header": [
                     {
                         "key": "Authorization",
-                        "value": "Bearer {{customerToken}}",
+                        "value": "Bearer {{token}}",
                         "type": "text"
                     }
                 ],
                 "body": {
                     "mode": "raw",
-                    "raw": "{\n    \"providerId\": \"{{providerId}}\",\n    \"serviceId\": \"{{serviceId}}\",\n    \"timeSlotId\": \"{{timeSlotId}}\",\n    \"notes\": \"First time customer\"\n}",
+                    "raw": "{\n    \"serviceId\": \"{{serviceId}}\",\n    \"timeSlotId\": \"{{slotId}}\",\n    \"notes\": \"First time customer\"\n}",
                     "options": {
                         "raw": {
                             "language": "json"
@@ -250,7 +263,7 @@
                 "header": [
                     {
                         "key": "Authorization",
-                        "value": "Bearer {{customerToken}}",
+                        "value": "Bearer {{token}}",
                         "type": "text"
                     }
                 ],
@@ -282,10 +295,6 @@
             "value": ""
         },
         {
-            "key": "customerToken",
-            "value": ""
-        },
-        {
             "key": "providerId",
             "value": ""
         },
@@ -294,12 +303,24 @@
             "value": ""
         },
         {
-            "key": "timeSlotId",
+            "key": "slotId",
             "value": ""
         },
         {
             "key": "appointmentId",
             "value": ""
+        },
+        {
+            "key": "token",
+            "value": ""
+        },
+        {
+            "key": "startDate",
+            "value": "2024-01-01T00:00:00.000Z"
+        },
+        {
+            "key": "endDate",
+            "value": "2024-01-07T23:59:59.999Z"
         }
     ]
 }

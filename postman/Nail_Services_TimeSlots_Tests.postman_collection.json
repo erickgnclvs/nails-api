@@ -3,6 +3,24 @@
         "name": "Nail Services - Time Slots Tests",
         "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
     },
+    "event": [
+        {
+            "listen": "prerequest",
+            "script": {
+                "exec": [
+                    "if (!pm.collectionVariables.get('startDate')) {",
+                    "    const now = new Date();",
+                    "    const endOfDay = new Date(now);",
+                    "    endOfDay.setHours(23, 59, 59, 999);",
+                    "    ",
+                    "    pm.collectionVariables.set('startDate', now.toISOString());",
+                    "    pm.collectionVariables.set('endDate', endOfDay.toISOString());",
+                    "}"
+                ],
+                "type": "text/javascript"
+            }
+        }
+    ],
     "item": [
         {
             "name": "Generate Time Slots",
@@ -24,7 +42,7 @@
                 "header": [
                     {
                         "key": "Authorization",
-                        "value": "Bearer {{providerToken}}",
+                        "value": "Bearer {{token}}",
                         "type": "text"
                     }
                 ],
@@ -77,7 +95,7 @@
                 "header": [
                     {
                         "key": "Authorization",
-                        "value": "Bearer {{customerToken}}",
+                        "value": "Bearer {{token}}",
                         "type": "text"
                     }
                 ],
@@ -118,7 +136,7 @@
                 "header": [
                     {
                         "key": "Authorization",
-                        "value": "Bearer {{providerToken}}",
+                        "value": "Bearer {{token}}",
                         "type": "text"
                     }
                 ],
@@ -147,15 +165,23 @@
         },
         {
             "key": "startDate",
-            "value": "2024-01-01T00:00:00"
+            "value": "2024-01-01T00:00:00.000Z"
         },
         {
             "key": "endDate",
-            "value": "2024-01-07T23:59:59"
+            "value": "2024-01-07T23:59:59.999Z"
         },
         {
             "key": "slotStatus",
             "value": "BLOCKED"
+        },
+        {
+            "key": "providerId",
+            "value": "2"
+        },
+        {
+            "key": "token",
+            "value": ""
         }
     ]
 }

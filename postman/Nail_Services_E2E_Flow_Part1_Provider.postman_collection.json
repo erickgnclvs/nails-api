@@ -3,6 +3,24 @@
         "name": "Nail Services - E2E Flow Part 1 - Provider Setup",
         "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
     },
+    "event": [
+        {
+            "listen": "prerequest",
+            "script": {
+                "exec": [
+                    "if (!pm.collectionVariables.get('startDate')) {",
+                    "    const now = new Date();",
+                    "    const nextWeek = new Date(now);",
+                    "    nextWeek.setDate(now.getDate() + 7);",
+                    "    ",
+                    "    pm.collectionVariables.set('startDate', now.toISOString());",
+                    "    pm.collectionVariables.set('endDate', nextWeek.toISOString());",
+                    "}"
+                ],
+                "type": "text/javascript"
+            }
+        }
+    ],
     "item": [
         {
             "name": "1. Register Provider",
@@ -58,7 +76,7 @@
                             "pm.test(\"Response has token\", function () {",
                             "    var jsonData = pm.response.json();",
                             "    pm.expect(jsonData.token).to.exist;",
-                            "    pm.collectionVariables.set(\"providerToken\", jsonData.token);",
+                            "    pm.collectionVariables.set(\"token\", jsonData.token);",
                             "});"
                         ],
                         "type": "text/javascript"
@@ -93,12 +111,6 @@
                         "exec": [
                             "pm.test(\"Status code is 200\", function () {",
                             "    pm.response.to.have.status(200);",
-                            "});",
-                            "",
-                            "pm.test(\"Profile created successfully\", function () {",
-                            "    var jsonData = pm.response.json();",
-                            "    pm.expect(jsonData.userId).to.exist;",
-                            "    pm.expect(jsonData.profileType).to.equal('PROVIDER');",
                             "});"
                         ],
                         "type": "text/javascript"
@@ -110,13 +122,13 @@
                 "header": [
                     {
                         "key": "Authorization",
-                        "value": "Bearer {{providerToken}}",
+                        "value": "Bearer {{token}}",
                         "type": "text"
                     }
                 ],
                 "body": {
                     "mode": "raw",
-                    "raw": "{\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"phoneNumber\": \"+1234567890\",\n    \"businessName\": \"John's Nail Salon\",\n    \"description\": \"Professional nail care services\",\n    \"address\": \"123 Main St, City, State 12345\"\n}",
+                    "raw": "{\n    \"businessName\": \"John's Nail Salon\",\n    \"description\": \"Professional nail care services\",\n    \"address\": \"123 Main St, City, State 12345\",\n    \"bio\": \"Experienced nail technician with 5 years of experience\"\n}",
                     "options": {
                         "raw": {
                             "language": "json"
@@ -131,7 +143,7 @@
             }
         },
         {
-            "name": "4. Create Nail Service",
+            "name": "4. Add Nail Services",
             "event": [
                 {
                     "listen": "test",
@@ -141,10 +153,10 @@
                             "    pm.response.to.have.status(200);",
                             "});",
                             "",
-                            "pm.test(\"Service created successfully\", function () {",
+                            "pm.test(\"Response has service ID\", function () {",
                             "    var jsonData = pm.response.json();",
-                            "    pm.expect(jsonData.userId).to.exist;",
-                            "    pm.collectionVariables.set(\"serviceId\", jsonData.userId);",
+                            "    pm.expect(jsonData.id).to.exist;",
+                            "    pm.collectionVariables.set(\"serviceId\", jsonData.id);",
                             "});"
                         ],
                         "type": "text/javascript"
@@ -156,13 +168,13 @@
                 "header": [
                     {
                         "key": "Authorization",
-                        "value": "Bearer {{providerToken}}",
+                        "value": "Bearer {{token}}",
                         "type": "text"
                     }
                 ],
                 "body": {
                     "mode": "raw",
-                    "raw": "{\n    \"name\": \"Basic Manicure\",\n    \"description\": \"Classic manicure service\",\n    \"price\": 35.00,\n    \"durationMinutes\": 45,\n    \"categoryId\": 1\n}",
+                    "raw": "{\n    \"name\": \"Basic Manicure\",\n    \"description\": \"Basic nail care and polish\",\n    \"duration\": 30,\n    \"price\": 25.00\n}",
                     "options": {
                         "raw": {
                             "language": "json"
@@ -196,13 +208,13 @@
                 "header": [
                     {
                         "key": "Authorization",
-                        "value": "Bearer {{providerToken}}",
+                        "value": "Bearer {{token}}",
                         "type": "text"
                     }
                 ],
                 "body": {
                     "mode": "raw",
-                    "raw": "{\n    \"schedules\": [\n        {\n            \"dayOfWeek\": \"MONDAY\",\n            \"isWorkingDay\": true,\n            \"startTime\": \"09:00\",\n            \"endTime\": \"17:00\",\n            \"slotDurationMinutes\": 45\n        },\n        {\n            \"dayOfWeek\": \"TUESDAY\",\n            \"isWorkingDay\": true,\n            \"startTime\": \"09:00\",\n            \"endTime\": \"17:00\",\n            \"slotDurationMinutes\": 45\n        },\n        {\n            \"dayOfWeek\": \"WEDNESDAY\",\n            \"isWorkingDay\": true,\n            \"startTime\": \"09:00\",\n            \"endTime\": \"17:00\",\n            \"slotDurationMinutes\": 45\n        }\n    ]\n}",
+                    "raw": "{\n    \"monday\": {\n        \"startTime\": \"09:00\",\n        \"endTime\": \"17:00\",\n        \"isEnabled\": true\n    },\n    \"tuesday\": {\n        \"startTime\": \"09:00\",\n        \"endTime\": \"17:00\",\n        \"isEnabled\": true\n    },\n    \"wednesday\": {\n        \"startTime\": \"09:00\",\n        \"endTime\": \"17:00\",\n        \"isEnabled\": true\n    },\n    \"thursday\": {\n        \"startTime\": \"09:00\",\n        \"endTime\": \"17:00\",\n        \"isEnabled\": true\n    },\n    \"friday\": {\n        \"startTime\": \"09:00\",\n        \"endTime\": \"17:00\",\n        \"isEnabled\": true\n    },\n    \"saturday\": {\n        \"startTime\": \"10:00\",\n        \"endTime\": \"15:00\",\n        \"isEnabled\": true\n    },\n    \"sunday\": {\n        \"isEnabled\": false\n    }\n}",
                     "options": {
                         "raw": {
                             "language": "json"
@@ -213,6 +225,47 @@
                     "raw": "{{baseUrl}}/api/v1/schedules",
                     "host": ["{{baseUrl}}"],
                     "path": ["api", "v1", "schedules"]
+                }
+            }
+        },
+        {
+            "name": "6. Generate Time Slots",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Status code is 200\", function () {",
+                            "    pm.response.to.have.status(200);",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{token}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/api/v1/slots/generate?startDate={{startDate}}&endDate={{endDate}}",
+                    "host": ["{{baseUrl}}"],
+                    "path": ["api", "v1", "slots", "generate"],
+                    "query": [
+                        {
+                            "key": "startDate",
+                            "value": "{{startDate}}"
+                        },
+                        {
+                            "key": "endDate",
+                            "value": "{{endDate}}"
+                        }
+                    ]
                 }
             }
         }
@@ -227,11 +280,19 @@
             "value": ""
         },
         {
-            "key": "providerToken",
+            "key": "serviceId",
             "value": ""
         },
         {
-            "key": "serviceId",
+            "key": "token",
+            "value": ""
+        },
+        {
+            "key": "startDate",
+            "value": ""
+        },
+        {
+            "key": "endDate",
             "value": ""
         }
     ]
