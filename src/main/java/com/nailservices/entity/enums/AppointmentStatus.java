@@ -1,4 +1,4 @@
-package com.nailservices.entity;
+package com.nailservices.entity.enums;
 
 public enum AppointmentStatus {
     PENDING,      // Initial state when appointment is created

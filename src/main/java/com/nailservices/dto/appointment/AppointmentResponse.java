@@ -2,7 +2,7 @@ package com.nailservices.dto.appointment;
 
 import com.nailservices.dto.service.NailServiceResponse;
 import com.nailservices.dto.profile.ProfileResponse;
-import com.nailservices.entity.AppointmentStatus;
+import com.nailservices.entity.enums.AppointmentStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -1,6 +1,6 @@
 package com.nailservices.service;
 
-import com.nailservices.entity.TimeSlotStatus;
+import com.nailservices.entity.enums.TimeSlotStatus;
 import com.nailservices.repository.TimeSlotRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

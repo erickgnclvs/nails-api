@@ -1,7 +1,7 @@
 package com.nailservices.repository;
 
 import com.nailservices.entity.Profile;
-import com.nailservices.entity.ProfileType;
+import com.nailservices.entity.enums.ProfileType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

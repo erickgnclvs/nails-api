@@ -1,5 +1,6 @@
 package com.nailservices.entity;
 
+import com.nailservices.entity.enums.ProfileType;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
@@ -60,5 +61,9 @@ public class Profile {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
+    }
+
+    public boolean isStudioProvider() {
+        return ProfileType.STUDIO_PROVIDER.equals(this.profileType);
     }
 }

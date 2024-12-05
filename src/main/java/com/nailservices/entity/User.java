@@ -1,5 +1,6 @@
 package com.nailservices.entity;
 
+import com.nailservices.entity.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;

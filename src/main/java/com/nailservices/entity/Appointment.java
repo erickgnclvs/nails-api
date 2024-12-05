@@ -1,5 +1,6 @@
 package com.nailservices.entity;
 
+import com.nailservices.entity.enums.AppointmentStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

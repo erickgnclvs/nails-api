@@ -3,7 +3,7 @@ package com.nailservices.service;
 import com.nailservices.dto.schedule.WeeklyScheduleRequest;
 import com.nailservices.dto.schedule.WeeklyScheduleResponse;
 import com.nailservices.entity.User;
-import com.nailservices.entity.UserRole;
+import com.nailservices.entity.enums.UserRole;
 import com.nailservices.entity.WeeklySchedule;
 import com.nailservices.exception.NailServicesException;
 import com.nailservices.repository.UserRepository;

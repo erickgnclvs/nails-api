@@ -1,7 +1,7 @@
 package com.nailservices.service;
 
 import com.nailservices.dto.profile.ProfileResponse;
-import com.nailservices.entity.ProfileType;
+import com.nailservices.entity.enums.ProfileType;
 import com.nailservices.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

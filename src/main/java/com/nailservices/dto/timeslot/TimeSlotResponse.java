@@ -1,6 +1,6 @@
 package com.nailservices.dto.timeslot;
 
-import com.nailservices.entity.TimeSlotStatus;
+import com.nailservices.entity.enums.TimeSlotStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -2,7 +2,7 @@ package com.nailservices.controller;
 
 import com.nailservices.dto.appointment.AppointmentRequest;
 import com.nailservices.dto.appointment.AppointmentResponse;
-import com.nailservices.entity.AppointmentStatus;
+import com.nailservices.entity.enums.AppointmentStatus;
 import com.nailservices.security.annotation.AuthenticatedAccess;
 import com.nailservices.security.annotation.ProviderAccess;
 import com.nailservices.service.AppointmentService;

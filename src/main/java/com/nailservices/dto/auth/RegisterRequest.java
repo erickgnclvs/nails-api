@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import com.nailservices.entity.UserRole;
+import com.nailservices.entity.enums.UserRole;
 
 @Data
 public class RegisterRequest {

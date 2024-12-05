@@ -1,7 +1,7 @@
 package com.nailservices.repository;
 
 import com.nailservices.entity.Appointment;
-import com.nailservices.entity.AppointmentStatus;
+import com.nailservices.entity.enums.AppointmentStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

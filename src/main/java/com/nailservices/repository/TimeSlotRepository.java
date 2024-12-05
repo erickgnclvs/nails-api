@@ -1,7 +1,7 @@
 package com.nailservices.repository;
 
 import com.nailservices.entity.TimeSlot;
-import com.nailservices.entity.TimeSlotStatus;
+import com.nailservices.entity.enums.TimeSlotStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

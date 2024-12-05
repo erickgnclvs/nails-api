@@ -1,4 +1,4 @@
-package com.nailservices.entity;
+package com.nailservices.entity.enums;
 
 public enum UserRole {
     CUSTOMER,

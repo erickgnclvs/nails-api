@@ -1,7 +1,7 @@
 package com.nailservices.controller;
 
 import com.nailservices.dto.timeslot.TimeSlotResponse;
-import com.nailservices.entity.TimeSlotStatus;
+import com.nailservices.entity.enums.TimeSlotStatus;
 import com.nailservices.security.annotation.AuthenticatedAccess;
 import com.nailservices.security.annotation.ProviderAccess;
 import com.nailservices.service.TimeSlotService;

@@ -1,6 +1,6 @@
 package com.nailservices.dto.auth;
 
-import com.nailservices.entity.UserRole;
+import com.nailservices.entity.enums.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
