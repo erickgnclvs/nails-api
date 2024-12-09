@@ -2,11 +2,18 @@ package com.nailservices.dto.profile;
 
 import com.nailservices.entity.Profile;
 import com.nailservices.entity.enums.ProfileType;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@Builder
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProfileResponse {
     private Long id;
     private String email;
