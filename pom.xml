@@ -11,11 +11,11 @@
         <relativePath/>
     </parent>
     
-    <groupId>com.nailservices</groupId>
-    <artifactId>nail-services-app</artifactId>
+    <groupId>com.nails-api</groupId>
+    <artifactId>nails-api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>nail-services-app</name>
-    <description>Nail Services Marketplace Application</description>
+    <name>nails-api</name>
+    <description>Nails API</description>
     
     <properties>
         <java.version>17</java.version>
