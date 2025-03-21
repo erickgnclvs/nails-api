@@ -1,6 +1,6 @@
-# Nail Services Marketplace Application
+# Nails
 
-This is a Spring Boot application that provides the backend API for a nail services marketplace platform.
+This is a Spring Boot application that provides the backend API for a nail tech app.
 
 ## Prerequisites
 
